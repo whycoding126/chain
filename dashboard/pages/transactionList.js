@@ -1,22 +1,20 @@
-const commands = {
-  filter(filter) {
+const txListCommands = {
+  filter(filter, client) {
     return this
       .waitForElementVisible('@filterInput')
-      .setValue('@filterInput', filter)
-      .waitForElementVisible('@submitButton')
-      .click('@submitButton')
+      .setValue('@filterInput', [filter, client.keys.ENTER])
   },
 }
 
-export default {
-  url: 'http://localhost:1999/transactions',
-  commands: [commands],
+module.exports = {
+  url: 'http://localhost:1999/dashboard/transactions',
+  commands: [txListCommands],
   elements: {
     filterInput: {
       selector: 'input[type=search]'
     },
     submitButton: {
-      selector: 'button[type=submit]'
+      selector: 'input[type=submit]'
     },
     emptyState: {
       selector: '.EmptyList__empty__1pTM6'
