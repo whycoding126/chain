@@ -1,32 +1,25 @@
 const commands = {
-  search(filter) {
-    // return this
-    //   .waitForElementVisible('@emailInput')
-    //   .setValue('@emailInput', email)
-    //   .setValue('@passInput', pass)
-    //   .waitForElementVisible('@loginButton')
-    //   .click('@loginButton')    
+  filter(filter) {
+    return this
+      .waitForElementVisible('@filterInput')
+      .setValue('@filterInput', filter)
+      .waitForElementVisible('@submitButton')
+      .click('@submitButton')
   },
-  nextPage() {
-
-  },
-  prevPage() {
-
-  }
 }
 
 export default {
   url: 'http://localhost:1999/transactions',
   commands: [commands],
   elements: {
-    emailInput: {
-      selector: 'input[type=text]'
+    filterInput: {
+      selector: 'input[type=search]'
     },
-    passInput: {
-      selector: 'input[name=password]'
-    },
-    loginButton: {
+    submitButton: {
       selector: 'button[type=submit]'
+    },
+    emptyState: {
+      selector: '.EmptyList__empty__1pTM6'
     }
   }
 }
