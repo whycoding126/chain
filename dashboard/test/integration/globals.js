@@ -12,11 +12,14 @@ module.exports = {
   // Global timeout for waitForXYZ calls
   waitForConditionTimeout: 5000,
 
+  // UUID to reference throughout test run
   testUuid,
 
+  // Xpub to use for creating objects in test run
   xpub: () => _xpub,
-  before: (done) => {
 
+  // Chain Core global state setup
+  before: (done) => {
     // Create key
     let promise = new chain.MockHsm({alias: `key-${testUuid}`}).create(context)
     promise.then(key => {
@@ -34,5 +37,7 @@ module.exports = {
 
     done()
   },
-  default: {} // required for non-env variables to be accessible everywhere
+
+  // required for non-env variables to be accessible everywhere
+  default: {}
 }
