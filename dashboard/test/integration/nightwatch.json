@@ -18,7 +18,7 @@
   },
   "test_settings": {
     "default": {
-      "launch_url": "http://localhot:3000",
+      "launch_url": "http://localhost:1999/dashboard",
       "selenium_port": 4444,
       "selenium_host": "localhost",
       "silent": true,
@@ -27,6 +27,9 @@
         "javascriptEnabled": true,
         "acceptSslCerts": true
       }
+    },
+    "dev": {
+      "launch_url": "http://localhost:3000"
     }
   }
 }

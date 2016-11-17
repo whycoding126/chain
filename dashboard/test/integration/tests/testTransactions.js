@@ -12,6 +12,6 @@ export default {
   },
 
   'Create transaction': (client) => {
-    const transactionList = client.page.
+    // const transactionList = client.page.
   }
 }

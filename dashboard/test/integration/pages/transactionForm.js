@@ -11,9 +11,9 @@ const txListCommands = {
 }
 
 module.exports = {
-  url: 'http://localhost:3000/transactions/create',
+  url: () => this.api.launchUrl + '/transactions/create',
   commands: [txListCommands],
   elements: {
-    
+
   }
 }

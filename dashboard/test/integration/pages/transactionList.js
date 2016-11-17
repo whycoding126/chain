@@ -1,14 +1,15 @@
 const txListCommands = {
-  filter(filter, client) {
+  filter(filter) {
     return this
       .waitForElementVisible('@filterInput')
-      .setValue('@filterInput', [filter, client.keys.ENTER])
+      .setValue('@filterInput', filter)
       .submitForm('@filterForm')
   },
 }
 
 module.exports = {
-  url: 'http://localhost:3000/transactions',
+  url: function() {
+    return this.api.launchUrl + '/transactions' },
   commands: [txListCommands],
   elements: {
     filterInput: {

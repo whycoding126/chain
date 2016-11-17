@@ -11,7 +11,8 @@
     "generate-component": "babel-node bin/generate.js component",
 
     "selenium-setup": "node_modules/selenium-standalone/bin/selenium-standalone install",
-    "test": "nightwatch -c test/integration/nightwatch.conf.js"
+    "test": "nightwatch -c test/integration/nightwatch.conf.js",
+    "test-dev": "nightwatch -c test/integration/nightwatch.conf.js --env dev"
   },
   "author": "Chain",
   "license": "",
