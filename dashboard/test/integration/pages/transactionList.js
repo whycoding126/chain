@@ -3,21 +3,22 @@ const txListCommands = {
     return this
       .waitForElementVisible('@filterInput')
       .setValue('@filterInput', [filter, client.keys.ENTER])
+      .submitForm('@filterForm')
   },
 }
 
 module.exports = {
-  url: 'http://localhost:1999/dashboard/transactions',
+  url: 'http://localhost:3000/transactions',
   commands: [txListCommands],
   elements: {
     filterInput: {
       selector: 'input[type=search]'
     },
-    submitButton: {
-      selector: 'input[type=submit]'
+    filterForm: {
+      selector: 'form'
     },
     emptyState: {
-      selector: '.EmptyList__empty__1pTM6'
+      selector: '#EmptyList'
     }
   }
 }

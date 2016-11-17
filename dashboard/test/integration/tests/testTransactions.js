@@ -4,10 +4,14 @@ export default {
 
     transactionList
       .navigate()
-      .filter('id="fake"', client)
+      .filter("id='fake'")
 
     transactionList.expect.element('@emptyState').text.to.contain('No results for query')
 
     client.end()
+  },
+
+  'Create transaction': (client) => {
+    const transactionList = client.page.
   }
 }

@@ -18,7 +18,7 @@
   },
   "test_settings": {
     "default": {
-      "launch_url": "http://localhot:1999",
+      "launch_url": "http://localhot:3000",
       "selenium_port": 4444,
       "selenium_host": "localhost",
       "silent": true,
