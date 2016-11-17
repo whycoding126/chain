@@ -1,9 +1,9 @@
 const txListCommands = {
   addIssue(asset, amount) {
     return this
-      // .waitForElementVisible('@filterInput')
-      // .setValue('@filterInput')
-      // .submitForm('@filterForm')
+      .waitForElementVisible('@addAction')
+      .click('@addAction')
+      .click('@addIssueActionLink')
   },
   addRetire(asset, amount) {
     return this
@@ -11,9 +11,17 @@ const txListCommands = {
 }
 
 module.exports = {
-  url: () => this.api.launchUrl + '/transactions/create',
+  url: function() {
+    return this.api.launchUrl + '/transactions/create' },
   commands: [txListCommands],
   elements: {
-
+    addAction: {
+      selector: '//button[text()="+ Add Action"]',
+      locateStrategy: 'xpath',
+    },
+    addIssueActionLink: {
+      selector: '//a[text()="Issue"]',
+      locateStrategy: 'xpath',
+    }
   }
 }

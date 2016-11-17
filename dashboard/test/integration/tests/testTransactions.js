@@ -1,6 +1,6 @@
 export default {
-  'View empty transaction filter results': (client) => {
-    const transactionList = client.page.transactionList()
+  'View empty transaction filter results': (browser) => {
+    const transactionList = browser.page.transactionList()
 
     transactionList
       .navigate()
@@ -8,10 +8,16 @@ export default {
 
     transactionList.expect.element('@emptyState').text.to.contain('No results for query')
 
-    client.end()
+    browser.end()
   },
 
-  'Create transaction': (client) => {
-    // const transactionList = client.page.
+  'Create transaction': (browser) => {
+    const transactionForm = browser.page.transactionForm()
+
+    transactionForm
+      .navigate()
+      .addIssue('', 0)
+
+    browser.end()
   }
 }
