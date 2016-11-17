@@ -18,6 +18,8 @@ export default {
       .navigate()
       .addIssue('', 0)
 
+    browser.saveScreenshot('1.png')
+
     browser.end()
   }
 }

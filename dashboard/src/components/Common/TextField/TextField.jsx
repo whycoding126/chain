@@ -24,6 +24,8 @@ class TextField extends React.Component {
     if (error) {
       inputClasses.push(styles.errorInput)
     }
+    
+    console.log(this.props.fieldProps)
 
     return(
       <div className='form-group'>

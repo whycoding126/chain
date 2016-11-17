@@ -62,6 +62,8 @@ class AutocompleteField extends React.Component {
     const { suggestions } = this.state
     const { fieldProps } = this.props
 
+    console.log(fieldProps)
+
     return (
       <Autosuggest
         theme={styles}

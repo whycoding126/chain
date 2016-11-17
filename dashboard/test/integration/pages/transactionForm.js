@@ -16,12 +16,12 @@ module.exports = {
   commands: [txListCommands],
   elements: {
     addAction: {
-      selector: '//button[text()="+ Add Action"]',
-      locateStrategy: 'xpath',
+      selector: '._add-action'
     },
     addIssueActionLink: {
       selector: '//a[text()="Issue"]',
       locateStrategy: 'xpath',
     }
+    latestAction: {}
   }
 }
