@@ -6,18 +6,22 @@ const context = new chain.Context({
 })
 
 const testUuid = uuid.v4()
+let _xpub = ''
 
 module.exports = {
-  // Global timeout for waitForXYZ calls 
+  // Global timeout for waitForXYZ calls
   waitForConditionTimeout: 5000,
 
   testUuid,
-  before: function(done) {
+
+  xpub: () => _xpub,
+  before: (done) => {
 
     // Create key
     let promise = new chain.MockHsm({alias: `key-${testUuid}`}).create(context)
     promise.then(key => {
-      const keys = {quorum: 1, root_xpubs: [key.xpub]}
+      _xpub = key.xpub
+      const keys = {quorum: 1, root_xpubs: [_xpub]}
 
       // Create accounts
       new chain.Account({alias: `alice-${testUuid}`, ...keys}).create(context)
