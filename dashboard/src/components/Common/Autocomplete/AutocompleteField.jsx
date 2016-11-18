@@ -62,7 +62,8 @@ class AutocompleteField extends React.Component {
     const { suggestions } = this.state
     const { fieldProps } = this.props
 
-    console.log(fieldProps)
+    const nameComponents = fieldProps.name.split('.')
+    const name = nameComponents[nameComponents.length - 1]
 
     return (
       <Autosuggest
@@ -77,7 +78,9 @@ class AutocompleteField extends React.Component {
           className: `form-control ${this.props.className}`,
           value: fieldProps.value,
           placeholder: this.props.placeholder,
-          onChange: (event, { newValue }) => fieldProps.onChange(newValue) }}
+          onChange: (event, { newValue }) => fieldProps.onChange(newValue),
+          ['data-name']: name
+        }}
       />
     )
   }

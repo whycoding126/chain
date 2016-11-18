@@ -11,14 +11,17 @@ export default {
     browser.end()
   },
 
-  'Create transaction': (browser) => {
+  'Issue and retire assets': (browser) => {
     const transactionForm = browser.page.transactionForm()
+    const transactionSingle = browser.page.transactionSingle()
 
     transactionForm
       .navigate()
-      .addIssue('', 0)
+      .addIssue('gold-' + browser.globals.testUuid, 100)
+      .addRetire('gold-' + browser.globals.testUuid, 100)
+      .submitTransaction()
 
-    browser.saveScreenshot('1.png')
+    transactionSingle.expect.element('@successFlash').to.be.present
 
     browser.end()
   }

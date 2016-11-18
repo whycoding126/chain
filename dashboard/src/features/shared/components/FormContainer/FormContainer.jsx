@@ -20,7 +20,11 @@ class FormContainer extends React.Component {
                     error={this.props.error} />}
 
                 <div className={styles.submit}>
-                  <button type='submit' className='btn btn-primary' disabled={this.props.submitting}>
+                  <button
+                    type='submit'
+                    className='btn btn-primary'
+                    disabled={this.props.submitting}
+                    data-name='submit'>
                     {this.props.submitLabel || 'Submit'}
                   </button>
 

@@ -82,8 +82,8 @@ export default class ActionItem extends React.Component {
       <div
         className={classNames.join(' ')}
         ref={ref => this.scrollRef = ref}
-        data-type='action'
-        data-index={this.props.index} >
+        data-index={this.props.index}
+        data-name={type.value} >
         <HiddenField fieldProps={type} />
 
         <div className={styles.header}>

@@ -109,7 +109,8 @@ class Form extends React.Component {
 
             <div className={`btn-group ${this.state.showDropdown ? 'open' : ''}`}>
               <DropdownButton
-                className='btn btn-default _add-action'
+                data-name='add-action'
+                className='btn btn-default'
                 id='input-dropdown-addon'
                 title='+ Add Action'
                 onSelect={this.addActionItem}

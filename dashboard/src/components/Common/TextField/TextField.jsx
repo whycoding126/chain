@@ -24,14 +24,16 @@ class TextField extends React.Component {
     if (error) {
       inputClasses.push(styles.errorInput)
     }
-    
-    console.log(this.props.fieldProps)
+
+    const nameComponents = this.props.fieldProps.name.split('.')
+    const name = nameComponents[nameComponents.length - 1]
 
     return(
       <div className='form-group'>
         {this.props.title && <FieldLabel className={styles.title}>{this.props.title}</FieldLabel>}
         <input className='form-control'
           type={this.state.type}
+          data-name={name}
           placeholder={this.props.placeholder}
           autoFocus={!!this.props.autoFocus}
           {...fieldProps} />
