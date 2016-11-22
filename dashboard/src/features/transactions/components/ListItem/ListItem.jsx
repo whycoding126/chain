@@ -9,7 +9,7 @@ class ListItem extends React.Component {
     const item = this.props.item
 
     return(
-      <div className={styles.main}>
+      <div className={styles.main} data-name='transactionItem'>
         <div className={styles.titleBar}>
           <div className={styles.title}>
             <label>Transaction ID:</label>

@@ -39,7 +39,7 @@ class EmptyList extends React.Component {
     }
 
     return (
-      <div className={`flex-container ${classNames.join(' ')}`}>
+      <div className={`flex-container ${classNames.join(' ')}`} data-name='emptyList'>
         {emptyImage && <img className={styles.image} src={emptyImage} />}
         {emptyBlock}
       </div>
