@@ -70,10 +70,10 @@ var instanceConfigs = map[string]instanceConfig{
 	"default": instanceConfig{
 		AMI:                     "ami-40d28157", // Ubuntu LTS 16.04
 		InstanceType:            "m3.xlarge",
-		CoredMaxDBConns:         "500",
+		CoredMaxDBConns:         "1000",
 		PostgresAMI:             "ami-2ef48339", // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
 		PostgresInstanceType:    "i2.xlarge",
-		MaxConnections:          530,
+		MaxConnections:          1030,
 		SharedBuffers:           "15GB",
 		EffectiveCacheSize:      "45GB", // ~3/4 total mem
 		WorkMem:                 "32MB",
@@ -85,10 +85,10 @@ var instanceConfigs = map[string]instanceConfig{
 	"max": instanceConfig{
 		AMI:                     "ami-2ef48339", // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
 		InstanceType:            "m4.16xlarge",
-		CoredMaxDBConns:         "500",
+		CoredMaxDBConns:         "1000",
 		PostgresAMI:             "ami-2ef48339", // Ubuntu Server 16.04 LTS (HVM), SSD Volume Type
 		PostgresInstanceType:    "i2.4xlarge",
-		MaxConnections:          530,
+		MaxConnections:          1030,
 		SharedBuffers:           "30GB",
 		EffectiveCacheSize:      "85GB", // ~3/4 total mem
 		WorkMem:                 "64MB",
@@ -811,6 +811,7 @@ sudo -u ubuntu bash <<EOFUBUNTU
 export DATABASE_URL='{{dbURL}}'
 export MAXDBCONNS={{dbConns}}
 export GOTRACEBACK=crash
+export INDEX_TRANSACTIONS=0
 ./cored 2>&1 | tee -a cored.log
 EOFUBUNTU
 EOFROOT

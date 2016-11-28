@@ -23,6 +23,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
+	"time"
 
 	"chain/errors"
 	"chain/log"
@@ -52,6 +53,13 @@ func logQuery(ctx context.Context, query string, args interface{}) {
 			s = s[:maxArgsLogLen-3] + "..."
 		}
 		log.Write(ctx, "query", query, "args", s)
+	}
+}
+
+func logLongQuery(ctx context.Context, query string, start time.Time) {
+	dur := time.Now().Sub(start)
+	if dur > 500*time.Millisecond {
+		log.Write(ctx, "query", query, "duration", dur.String())
 	}
 }
 
@@ -109,14 +117,18 @@ type Tx struct {
 //     err = rows.Err() // get any error encountered during iteration
 //     ...
 type Rows struct {
-	ctx  context.Context
-	rows *sql.Rows
+	ctx   context.Context
+	query string
+	start time.Time
+	rows  *sql.Rows
 }
 
 // Row is the result of calling QueryRow to select a single row.
 type Row struct {
-	ctx context.Context
-	row *sql.Row
+	ctx   context.Context
+	query string
+	start time.Time
+	row   *sql.Row
 }
 
 // A Result summarizes an executed SQL command.
@@ -203,6 +215,9 @@ func (db *DB) Begin(ctx context.Context) (*Tx, error) {
 // Exec executes a query without returning any rows.
 // The args are for any placeholder parameters in the query.
 func (db *DB) Exec(ctx context.Context, query string, args ...interface{}) (Result, error) {
+	s := time.Now()
+	defer logLongQuery(ctx, query, s)
+
 	logQuery(ctx, query, args)
 	return db.db.Exec(query, args...)
 }
@@ -210,21 +225,33 @@ func (db *DB) Exec(ctx context.Context, query string, args ...interface{}) (Resu
 // Query executes a query that returns rows, typically a SELECT.
 // The args are for any placeholder parameters in the query.
 func (db *DB) Query(ctx context.Context, query string, args ...interface{}) (*Rows, error) {
+	s := time.Now()
 	logQuery(ctx, query, args)
 	rows, err := db.db.Query(query, args...)
 	if err != nil {
 		return nil, errors.Wrap(err)
 	}
-	return &Rows{rows: rows, ctx: ctx}, nil
+	return &Rows{
+		rows:  rows,
+		ctx:   ctx,
+		query: query,
+		start: s,
+	}, nil
 }
 
 // QueryRow executes a query that is expected to return at most one row.
 // QueryRow always return a non-nil value. Errors are deferred until
 // Row's Scan method is called.
 func (db *DB) QueryRow(ctx context.Context, query string, args ...interface{}) *Row {
+	s := time.Now()
 	logQuery(ctx, query, args)
 	row := db.db.QueryRow(query, args...)
-	return &Row{row: row, ctx: ctx}
+	return &Row{
+		row:   row,
+		ctx:   ctx,
+		query: query,
+		start: s,
+	}
 }
 
 // Commit commits the transaction.
@@ -240,6 +267,9 @@ func (tx *Tx) Rollback(ctx context.Context) error {
 // Exec executes a query that doesn't return rows.
 // For example: an INSERT and UPDATE.
 func (tx *Tx) Exec(ctx context.Context, query string, args ...interface{}) (Result, error) {
+	s := time.Now()
+	defer logLongQuery(ctx, query, s)
+
 	logQuery(ctx, query, args)
 	return tx.tx.Exec(query, args...)
 }
@@ -247,27 +277,30 @@ func (tx *Tx) Exec(ctx context.Context, query string, args ...interface{}) (Resu
 // Query executes a query that returns rows, typically a SELECT.
 // The args are for any placeholder parameters in the query.
 func (tx *Tx) Query(ctx context.Context, query string, args ...interface{}) (*Rows, error) {
+	s := time.Now()
 	logQuery(ctx, query, args)
 	rows, err := tx.tx.Query(query, args...)
 	if err != nil {
 		return nil, errors.Wrap(err)
 	}
-	return &Rows{rows: rows, ctx: ctx}, nil
+	return &Rows{rows: rows, ctx: ctx, query: query, start: s}, nil
 }
 
 // QueryRow executes a query that is expected to return at most one row.
 // QueryRow always return a non-nil value. Errors are deferred until
 // Row's Scan method is called.
 func (tx *Tx) QueryRow(ctx context.Context, query string, args ...interface{}) *Row {
+	s := time.Now()
 	logQuery(ctx, query, args)
 	row := tx.tx.QueryRow(query, args...)
-	return &Row{row: row, ctx: ctx}
+	return &Row{row: row, ctx: ctx, query: query, start: s}
 }
 
 // Close closes the Rows, preventing further enumeration. If Next returns
 // false, the Rows are closed automatically and it will suffice to check the
 // result of Err. Close is idempotent and does not affect the result of Err.
 func (rs *Rows) Close() error {
+	logLongQuery(rs.ctx, rs.query, rs.start)
 	return rs.rows.Close()
 }
 
@@ -284,6 +317,7 @@ func (rs *Rows) Next() bool {
 // Err returns the error, if any, that was encountered during iteration.
 // Err may be called after an explicit or implicit Close.
 func (rs *Rows) Err() error {
+	logLongQuery(rs.ctx, rs.query, rs.start)
 	return rs.rows.Err()
 }
 
@@ -308,5 +342,7 @@ func (rs *Rows) Scan(dest ...interface{}) error {
 // Scan uses the first row and discards the rest.  If no row matches
 // the query, Scan returns ErrNoRows.
 func (r *Row) Scan(dest ...interface{}) error {
-	return r.row.Scan(dest...)
+	err := r.row.Scan(dest...)
+	logLongQuery(r.ctx, r.query, r.start)
+	return err
 }
